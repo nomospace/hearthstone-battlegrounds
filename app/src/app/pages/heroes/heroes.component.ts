@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { HeroService } from '../../services/hero.service';
 
 /**
@@ -8,6 +9,7 @@ import { HeroService } from '../../services/hero.service';
 @Component({
   selector: 'hbg-heroes',
   standalone: true,
+  imports: [RouterLink],
   template: `
     <div class="heroes-page">
       <h2>🏆 英雄大全</h2>
@@ -58,7 +60,8 @@ import { HeroService } from '../../services/hero.service';
       
       <div class="heroes-grid">
         @for (hero of filteredHeroes(); track hero.id) {
-          <div class="hero-detail-card" [class]="'tier-' + hero.tier.toLowerCase()">
+          <a [routerLink]="['/heroes', hero.id]" class="hero-link">
+            <div class="hero-detail-card" [class]="'tier-' + hero.tier.toLowerCase()">
             <div class="hero-header">
               <div class="hero-avatar">🦸</div>
               <div class="hero-basic">
@@ -119,6 +122,7 @@ import { HeroService } from '../../services/hero.service';
               </ul>
             </div>
           </div>
+          </a>
         }
       </div>
     </div>
@@ -184,6 +188,17 @@ import { HeroService } from '../../services/hero.service';
       gap: 1.5rem;
     }
     
+    .hero-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: transform 0.3s;
+    }
+
+    .hero-link:hover {
+      transform: translateY(-4px);
+    }
+
     .hero-detail-card {
       background: rgba(255, 255, 255, 0.1);
       border-radius: 16px;

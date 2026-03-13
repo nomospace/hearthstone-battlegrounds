@@ -33,4 +33,25 @@ describe('Hero Data', () => {
     const t0Heroes = HEROES.filter(h => h.tier === 'T0');
     expect(t0Heroes.length).toBeGreaterThan(0);
   });
+
+  it('should have ability for each hero', () => {
+    HEROES.forEach(hero => {
+      expect(hero.ability).toBeDefined();
+      expect(hero.ability.name).toBeDefined();
+      expect(hero.ability.description).toBeDefined();
+      expect(hero.ability.cost).toBeGreaterThanOrEqual(0);
+    });
+  });
+
+  it('should have synergies for each hero', () => {
+    HEROES.forEach(hero => {
+      expect(hero.synergies).toBeDefined();
+      expect(hero.synergies.length).toBeGreaterThan(0);
+      hero.synergies.forEach(card => {
+        expect(card.name).toBeDefined();
+        expect(card.tier).toBeGreaterThanOrEqual(1);
+        expect(card.tier).toBeLessThanOrEqual(6);
+      });
+    });
+  });
 });

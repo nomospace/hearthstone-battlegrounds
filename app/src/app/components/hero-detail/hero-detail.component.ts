@@ -1,0 +1,349 @@
+import { Component, inject, input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { HeroService } from '../../services/hero.service';
+import type { Hero } from '../../data/hero-data';
+
+/**
+ * 英雄详情组件 - Dumb Component
+ * 显示英雄头像、技能、推荐卡牌
+ */
+@Component({
+  selector: 'hbg-hero-detail',
+  standalone: true,
+  imports: [CommonModule, RouterLink],
+  template: `
+    @if (hero(); as heroData) {
+      <div class="hero-detail">
+        <!-- 英雄头部 -->
+        <div class="hero-header-section">
+          <div class="hero-avatar-wrapper">
+            <div class="hero-avatar">{{ getAvatarEmoji(heroData.id) }}</div>
+            <div class="tier-badge tier-{{ heroData.tier.toLowerCase() }}">{{ heroData.tier }}</div>
+          </div>
+          
+          <div class="hero-info">
+            <h2>{{ heroData.name }}</h2>
+            <p class="hero-english">{{ heroData.nameEn }}</p>
+            <div class="hero-stats-row">
+              <span class="stat">胜率：<strong>{{ heroData.winRate }}%</strong></span>
+              <span class="stat">选择率：<strong>{{ heroData.pickRate }}%</strong></span>
+              <span class="stat">均次：<strong>{{ heroData.avgPlacement }}</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 英雄技能 -->
+        <section class="ability-section">
+          <h3>⚡ 英雄技能</h3>
+          <div class="ability-card">
+            <div class="ability-icon">{{ getAbilityIcon(heroData.ability) }}</div>
+            <div class="ability-info">
+              <h4>{{ heroData.ability.name }} <span class="ability-cost">({{ heroData.ability.cost }}费)</span></h4>
+              <p class="ability-desc">{{ heroData.ability.description }}</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 推荐卡牌 -->
+        <section class="synergies-section">
+          <h3>🎯 推荐配合卡牌</h3>
+          <div class="cards-grid">
+            @for (card of heroData.synergies; track card.name) {
+              <div class="card-item tier-{{ getCardTierClass(card.tier) }}">
+                <div class="card-header">
+                  <span class="card-tier">T{{ card.tier }}</span>
+                  <span class="card-cost">{{ card.cost }}费</span>
+                </div>
+                <h4 class="card-name">{{ card.name }}</h4>
+                <div class="card-stats">
+                  <span>{{ card.attack }}/{{ card.health }}</span>
+                </div>
+                <p class="card-desc">{{ card.description }}</p>
+                <div class="card-tags">
+                  @for (tag of card.tags; track tag) {
+                    <span class="tag">{{ tag }}</span>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </section>
+
+        <!-- 使用技巧 -->
+        <section class="tips-section">
+          <h3>💡 使用技巧</h3>
+          <ul class="tips-list">
+            @for (tip of heroData.tips; track tip) {
+              <li>{{ tip }}</li>
+            }
+          </ul>
+        </section>
+
+        <div class="back-link">
+          <a routerLink="/heroes">← 返回英雄列表</a>
+        </div>
+      </div>
+    }
+  `,
+  styles: [`
+    .hero-detail {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .hero-header-section {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      padding: 2rem;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+    }
+
+    .hero-avatar-wrapper {
+      position: relative;
+    }
+
+    .hero-avatar {
+      font-size: 6rem;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 50%;
+      border: 4px solid #f39c12;
+    }
+
+    .tier-badge {
+      position: absolute;
+      bottom: -10px;
+      right: -10px;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    .tier-t0 { background: #f39c12; color: #000; }
+    .tier-t1 { background: #3498db; }
+    .tier-t2 { background: #2ecc71; }
+    .tier-t3 { background: #95a5a6; }
+
+    .hero-info h2 {
+      margin: 0 0 0.5rem;
+      font-size: 2rem;
+    }
+
+    .hero-english {
+      opacity: 0.7;
+      margin-bottom: 1rem;
+    }
+
+    .hero-stats-row {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .stat strong {
+      color: #f39c12;
+    }
+
+    section {
+      margin-bottom: 2rem;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #f39c12;
+    }
+
+    .ability-card {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 12px;
+      border-left: 4px solid #f39c12;
+    }
+
+    .ability-icon {
+      font-size: 3rem;
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(243, 156, 18, 0.2);
+      border-radius: 12px;
+    }
+
+    .ability-info h4 {
+      margin: 0 0 0.5rem;
+      font-size: 1.3rem;
+    }
+
+    .ability-cost {
+      color: #3498db;
+      font-size: 0.9rem;
+    }
+
+    .ability-desc {
+      margin: 0;
+      opacity: 0.9;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    .card-item {
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      border-left: 4px solid transparent;
+    }
+
+    .card-item.tier-6 { border-left-color: #f39c12; }
+    .card-item.tier-5 { border-left-color: #9b59b6; }
+    .card-item.tier-4 { border-left-color: #3498db; }
+    .card-item.tier-3 { border-left-color: #2ecc71; }
+    .card-item.tier-2 { border-left-color: #95a5a6; }
+    .card-item.tier-1 { border-left-color: #7f8c8d; }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .card-tier {
+      font-weight: bold;
+      color: #f39c12;
+    }
+
+    .card-cost {
+      color: #3498db;
+    }
+
+    .card-name {
+      margin: 0.5rem 0;
+      font-size: 1.1rem;
+    }
+
+    .card-stats {
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    .card-desc {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+
+    .tag {
+      padding: 0.2rem 0.6rem;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      font-size: 0.8rem;
+    }
+
+    .tips-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .tips-list li {
+      padding: 0.8rem;
+      margin-bottom: 0.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      border-left: 3px solid #2ecc71;
+    }
+
+    .back-link {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .back-link a {
+      color: #f39c12;
+      text-decoration: none;
+      font-size: 1.1rem;
+    }
+
+    .back-link a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .hero-header-section {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .hero-avatar {
+        margin: 0 auto;
+      }
+
+      .hero-stats-row {
+        justify-content: center;
+      }
+
+      .ability-card {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .ability-icon {
+        margin: 0 auto;
+      }
+    }
+  `]
+})
+export class HeroDetailComponent {
+  private readonly heroService = inject(HeroService);
+  readonly heroId = input.required<string>();
+
+  readonly hero = this.heroService.getHeroByIdSignal(this.heroId());
+
+  getAvatarEmoji(heroId: string): string {
+    const emojiMap: Record<string, string> = {
+      'yshaarj': '🐙',
+      'maiev': '🗡️',
+      'kaelthas': '🔥',
+      'dinoboard': '🦕',
+      'puffin': '🐧',
+      'voljin': '💀',
+      'sylvanas': '🏹',
+      'malygos': '🐉',
+      'ragnaros': '🌋',
+      'deathwing': '🦇'
+    };
+    return emojiMap[heroId] || '🦸';
+  }
+
+  getAbilityIcon(ability: any): string {
+    const keywords = ['战吼', '发现', '法术', '交换', '亡语', '召唤'];
+    const icons = ['📢', '🔍', '✨', '🔄', '💀', '🎯'];
+    const index = keywords.findIndex(k => ability.description.includes(k));
+    return index >= 0 ? icons[index] : '⚡';
+  }
+
+  getCardTierClass(tier: number): string {
+    return String(tier);
+  }
+}

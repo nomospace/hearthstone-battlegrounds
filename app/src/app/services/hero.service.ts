@@ -73,6 +73,15 @@ export class HeroService {
   }
 
   /**
+   * 根据 ID 获取英雄 (Signal)
+   */
+  getHeroByIdSignal(id: string) {
+    return computed(() => 
+      this.heroesSignal().find(hero => hero.id === id)
+    );
+  }
+
+  /**
    * 根据 ID 获取英雄
    */
   getHeroById(id: string): Hero | undefined {
