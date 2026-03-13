@@ -7,6 +7,7 @@ export interface LineupCard {
   attack: number;
   health: number;
   description: string;
+  imageUrl?: string;
   tags: string[];
   core: boolean; // 是否核心卡
 }

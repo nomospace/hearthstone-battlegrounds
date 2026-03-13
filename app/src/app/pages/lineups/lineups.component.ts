@@ -76,11 +76,14 @@ import type { Lineup } from '../../data/lineup-data';
               <div class="cards-list">
                 @for (card of getCoreCards(lineup); track card.name) {
                   <div class="card-item core-{{ card.core }}">
-                    <span class="card-tier">T{{ card.tier }}</span>
-                    <span class="card-name">{{ card.name }}</span>
-                    @if (card.core) {
-                      <span class="core-tag">核心</span>
-                    }
+                    <img [src]="card.imageUrl" [alt]="card.name" class="card-image" (error)="handleCardImageError($event)" *ngIf="card.imageUrl">
+                    <div class="card-info">
+                      <span class="card-tier">T{{ card.tier }}</span>
+                      <span class="card-name">{{ card.name }}</span>
+                      @if (card.core) {
+                        <span class="core-tag">核心</span>
+                      }
+                    </div>
                   </div>
                 }
               </div>
@@ -287,6 +290,21 @@ import type { Lineup } from '../../data/lineup-data';
       border-left: 3px solid #f39c12;
     }
 
+    .card-image {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 4px;
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    .card-info {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
     .card-tier {
       background: rgba(255, 255, 255, 0.2);
       padding: 0.2rem 0.5rem;
@@ -403,5 +421,10 @@ export class LineupsComponent {
 
   getCoreCards(lineup: Lineup) {
     return lineup.cards.filter(c => c.core);
+  }
+
+  handleCardImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.style.display = 'none';
   }
 }

@@ -18,7 +18,7 @@ import type { Hero } from '../../data/hero-data';
         <!-- 英雄头部 -->
         <div class="hero-header-section">
           <div class="hero-avatar-wrapper">
-            <div class="hero-avatar">{{ heroData.avatar }}</div>
+            <img [src]="heroData.avatar" [alt]="heroData.name" class="hero-avatar-img" (error)="handleImageError($event)">
             <div class="tier-badge tier-{{ heroData.tier.toLowerCase() }}">{{ heroData.tier }}</div>
           </div>
           
@@ -37,7 +37,7 @@ import type { Hero } from '../../data/hero-data';
         <section class="ability-section">
           <h3>⚡ 英雄技能</h3>
           <div class="ability-card">
-            <div class="ability-icon">{{ heroData.ability.icon }}</div>
+            <img [src]="heroData.ability.icon" [alt]="heroData.ability.name" class="ability-icon-img" (error)="handleImageError($event)">
             <div class="ability-info">
               <h4>{{ heroData.ability.name }} <span class="ability-cost">({{ heroData.ability.cost }}费)</span></h4>
               <p class="ability-desc">{{ heroData.ability.description }}</p>
@@ -106,7 +106,6 @@ import type { Hero } from '../../data/hero-data';
     }
 
     .hero-avatar {
-      font-size: 6rem;
       width: 120px;
       height: 120px;
       display: flex;
@@ -115,6 +114,13 @@ import type { Hero } from '../../data/hero-data';
       background: rgba(0, 0, 0, 0.3);
       border-radius: 50%;
       border: 4px solid #f39c12;
+      overflow: hidden;
+    }
+
+    .hero-avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .tier-badge {
@@ -171,7 +177,6 @@ import type { Hero } from '../../data/hero-data';
     }
 
     .ability-icon {
-      font-size: 3rem;
       width: 80px;
       height: 80px;
       display: flex;
@@ -179,6 +184,14 @@ import type { Hero } from '../../data/hero-data';
       justify-content: center;
       background: rgba(243, 156, 18, 0.2);
       border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .ability-icon-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 5px;
     }
 
     .ability-info h4 {
@@ -319,6 +332,13 @@ export class HeroDetailComponent {
   readonly heroId = input.required<string>();
 
   readonly hero = this.heroService.getHeroByIdSignal(this.heroId());
+
+  handleImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.style.display = 'none';
+    img.parentElement!.style.background = 'rgba(243, 156, 18, 0.3)';
+    img.parentElement!.innerHTML = '🖼️';
+  }
 
   getCardTierClass(tier: number): string {
     return String(tier);

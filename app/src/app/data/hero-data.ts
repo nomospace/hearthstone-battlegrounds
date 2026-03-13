@@ -46,7 +46,7 @@ export const HEROES: Hero[] = [
     id: 'yshaarj',
     name: '亚煞极',
     nameEn: 'Y\'Shaarj',
-    avatar: '🐙',
+    avatar: 'https://d15f34w2p8l1cc.cloudfront.net/hearthstone/962a5e0b6e52d5f0e6e0e5e5e5e5e5e5.png',
     tier: 'T0',
     winRate: 58.5,
     pickRate: 15.2,
@@ -65,7 +65,7 @@ export const HEROES: Hero[] = [
       nameEn: 'Touch of Y\'Shaarj',
       description: '使一个友方随从获得战吼触发两次',
       cost: 3,
-      icon: '⚡'
+      icon: 'https://d15f34w2p8l1cc.cloudfront.net/hearthstone/ability_yshaarj.png'
     },
     synergies: [
       {
@@ -75,6 +75,7 @@ export const HEROES: Hero[] = [
         attack: 2,
         health: 4,
         description: '你的战吼触发两次',
+        imageUrl: 'https://d15f34w2p8l1cc.cloudfront.net/hearthstone/brann_bronzebeard.png',
         tags: ['野兽', '战吼']
       },
       {
@@ -84,6 +85,7 @@ export const HEROES: Hero[] = [
         attack: 6,
         health: 6,
         description: '战吼：发现一个野兽',
+        imageUrl: 'https://d15f34w2p8l1cc.cloudfront.net/hearthstone/puffin.png',
         tags: ['野兽', '战吼']
       }
     ]
@@ -92,7 +94,7 @@ export const HEROES: Hero[] = [
     id: 'maiev',
     name: '玛维·影歌',
     nameEn: 'Maiev Shadowsong',
-    avatar: '🗡️',
+    avatar: 'https://d15f34w2p8l1cc.cloudfront.net/hearthstone/maiev_shadowsong.png',
     tier: 'T0',
     winRate: 57.8,
     pickRate: 18.5,
@@ -111,7 +113,7 @@ export const HEROES: Hero[] = [
       nameEn: 'Imprison',
       description: '发现一个对手的随从，获得它的复制',
       cost: 3,
-      icon: '🔍'
+      icon: 'https://d15f34w2p8l1cc.cloudfront.net/hearthstone/ability_maiev.png'
     },
     synergies: [
       {
@@ -121,6 +123,7 @@ export const HEROES: Hero[] = [
         attack: 5,
         health: 5,
         description: '战吼：发现一个随从',
+        imageUrl: 'https://d15f34w2p8l1cc.cloudfront.net/hearthstone/discover_core.png',
         tags: ['发现']
       }
     ]
@@ -129,7 +132,7 @@ export const HEROES: Hero[] = [
     id: 'kaelthas',
     name: '凯尔萨斯·逐日者',
     nameEn: 'Kael\'thas Sunstrider',
-    avatar: '🔥',
+    avatar: 'https://d15f34w2p8l1cc.cloudfront.net/hearthstone/kaelthas.png',
     tier: 'T0',
     winRate: 56.9,
     pickRate: 12.8,
@@ -148,7 +151,7 @@ export const HEROES: Hero[] = [
       nameEn: 'Fireball',
       description: '每回合第一个法术法力值消耗为 (0) 点',
       cost: 0,
-      icon: '✨'
+      icon: 'https://d15f34w2p8l1cc.cloudfront.net/hearthstone/ability_kaelthas.png'
     },
     synergies: [
       {
@@ -158,6 +161,7 @@ export const HEROES: Hero[] = [
         attack: 6,
         health: 6,
         description: '法术伤害 +2',
+        imageUrl: 'https://d15f34w2p8l1cc.cloudfront.net/hearthstone/spell_core.png',
         tags: ['法术']
       }
     ]
