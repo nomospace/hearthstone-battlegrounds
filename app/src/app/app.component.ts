@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
+/**
+ * 根组件 - Smart Component
+ * 负责导航布局和路由配置
+ */
 @Component({
   selector: 'hbg-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive],
   template: `
     <div class="app-container">
       <nav class="navbar">

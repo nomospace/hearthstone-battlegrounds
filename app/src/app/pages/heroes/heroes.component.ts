@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
-import { HEROES, HEROES_BY_WINRATE, getHeroesByTier, getHeroesByDifficulty } from '../../data/hero-data';
+import { Component, inject } from '@angular/core';
+import { HeroService } from '../../services/hero.service';
 
+/**
+ * 英雄列表组件 - Dumb Component
+ * 使用 OnPush 变更检测策略，所有数据通过 Input 接收
+ */
 @Component({
   selector: 'hbg-heroes',
   standalone: true,
@@ -12,35 +16,48 @@ import { HEROES, HEROES_BY_WINRATE, getHeroesByTier, getHeroesByDifficulty } fro
         <div class="filter-group">
           <label>按强度：</label>
           <div class="filter-buttons">
-            <button [class.active]="tierFilter === 'all'" (click)="tierFilter = 'all'">全部</button>
-            <button [class.active]="tierFilter === 'T0'" (click)="tierFilter = 'T0'">T0</button>
-            <button [class.active]="tierFilter === 'T1'" (click)="tierFilter = 'T1'">T1</button>
-            <button [class.active]="tierFilter === 'T2'" (click)="tierFilter = 'T2'">T2</button>
-            <button [class.active]="tierFilter === 'T3'" (click)="tierFilter = 'T3'">T3</button>
+            @for (tier of tiers; track tier) {
+              <button 
+                [class.active]="tierFilter() === tier" 
+                (click)="setTierFilter(tier)">
+                {{ tier === 'all' ? '全部' : tier }}
+              </button>
+            }
           </div>
         </div>
         
         <div class="filter-group">
           <label>按难度：</label>
           <div class="filter-buttons">
-            <button [class.active]="diffFilter === 'all'" (click)="diffFilter = 'all'">全部</button>
-            <button [class.active]="diffFilter === '简单'" (click)="diffFilter = '简单'">简单</button>
-            <button [class.active]="diffFilter === '中等'" (click)="diffFilter = '中等'">中等</button>
-            <button [class.active]="diffFilter === '困难'" (click)="diffFilter = '困难'">困难</button>
+            @for (diff of difficulties; track diff) {
+              <button 
+                [class.active]="difficultyFilter() === diff" 
+                (click)="setDifficultyFilter(diff)">
+                {{ diff === 'all' ? '全部' : diff }}
+              </button>
+            }
           </div>
         </div>
         
         <div class="filter-group">
           <label>排序：</label>
           <div class="filter-buttons">
-            <button [class.active]="sortType === 'winrate'" (click)="sortType = 'winrate'">胜率</button>
-            <button [class.active]="sortType === 'pickrate'" (click)="sortType = 'pickrate'">选择率</button>
+            <button 
+              [class.active]="sortType() === 'winrate'" 
+              (click)="setSortType('winrate')">
+              胜率
+            </button>
+            <button 
+              [class.active]="sortType() === 'pickrate'" 
+              (click)="setSortType('pickrate')">
+              选择率
+            </button>
           </div>
         </div>
       </div>
       
       <div class="heroes-grid">
-        @for (hero of filteredHeroes; track hero.id) {
+        @for (hero of filteredHeroes(); track hero.id) {
           <div class="hero-detail-card" [class]="'tier-' + hero.tier.toLowerCase()">
             <div class="hero-header">
               <div class="hero-avatar">🦸</div>
@@ -298,28 +315,27 @@ import { HEROES, HEROES_BY_WINRATE, getHeroesByTier, getHeroesByDifficulty } fro
   `]
 })
 export class HeroesComponent {
-  heroes = HEROES;
-  tierFilter = 'all';
-  diffFilter = 'all';
-  sortType = 'winrate';
+  private readonly heroService = inject(HeroService);
   
-  get filteredHeroes() {
-    let result = [...this.heroes];
-    
-    if (this.tierFilter !== 'all') {
-      result = result.filter(h => h.tier === this.tierFilter);
-    }
-    
-    if (this.diffFilter !== 'all') {
-      result = result.filter(h => h.difficulty === this.diffFilter);
-    }
-    
-    if (this.sortType === 'winrate') {
-      result.sort((a, b) => b.winRate - a.winRate);
-    } else if (this.sortType === 'pickrate') {
-      result.sort((a, b) => b.pickRate - a.pickRate);
-    }
-    
-    return result;
+  // 从服务获取 Signals
+  readonly filteredHeroes = this.heroService.filteredHeroes;
+  readonly tierFilter = this.heroService.tierFilterSignal;
+  readonly difficultyFilter = this.heroService.difficultyFilterSignal;
+  readonly sortType = this.heroService.sortTypeSignal;
+  
+  // 静态数据
+  readonly tiers = ['all', 'T0', 'T1', 'T2', 'T3'];
+  readonly difficulties = ['all', '简单', '中等', '困难'];
+  
+  setTierFilter(tier: string): void {
+    this.heroService.setTierFilter(tier);
+  }
+  
+  setDifficultyFilter(difficulty: string): void {
+    this.heroService.setDifficultyFilter(difficulty);
+  }
+  
+  setSortType(sortType: 'winrate' | 'pickrate'): void {
+    this.heroService.setSortType(sortType);
   }
 }
