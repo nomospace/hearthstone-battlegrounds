@@ -18,7 +18,7 @@ import type { Hero } from '../../data/hero-data';
         <!-- 英雄头部 -->
         <div class="hero-header-section">
           <div class="hero-avatar-wrapper">
-            <div class="hero-avatar">{{ getAvatarEmoji(heroData.id) }}</div>
+            <div class="hero-avatar">{{ heroData.avatar }}</div>
             <div class="tier-badge tier-{{ heroData.tier.toLowerCase() }}">{{ heroData.tier }}</div>
           </div>
           
@@ -37,7 +37,7 @@ import type { Hero } from '../../data/hero-data';
         <section class="ability-section">
           <h3>⚡ 英雄技能</h3>
           <div class="ability-card">
-            <div class="ability-icon">{{ getAbilityIcon(heroData.ability) }}</div>
+            <div class="ability-icon">{{ heroData.ability.icon }}</div>
             <div class="ability-info">
               <h4>{{ heroData.ability.name }} <span class="ability-cost">({{ heroData.ability.cost }}费)</span></h4>
               <p class="ability-desc">{{ heroData.ability.description }}</p>
@@ -319,29 +319,6 @@ export class HeroDetailComponent {
   readonly heroId = input.required<string>();
 
   readonly hero = this.heroService.getHeroByIdSignal(this.heroId());
-
-  getAvatarEmoji(heroId: string): string {
-    const emojiMap: Record<string, string> = {
-      'yshaarj': '🐙',
-      'maiev': '🗡️',
-      'kaelthas': '🔥',
-      'dinoboard': '🦕',
-      'puffin': '🐧',
-      'voljin': '💀',
-      'sylvanas': '🏹',
-      'malygos': '🐉',
-      'ragnaros': '🌋',
-      'deathwing': '🦇'
-    };
-    return emojiMap[heroId] || '🦸';
-  }
-
-  getAbilityIcon(ability: any): string {
-    const keywords = ['战吼', '发现', '法术', '交换', '亡语', '召唤'];
-    const icons = ['📢', '🔍', '✨', '🔄', '💀', '🎯'];
-    const index = keywords.findIndex(k => ability.description.includes(k));
-    return index >= 0 ? icons[index] : '⚡';
-  }
 
   getCardTierClass(tier: number): string {
     return String(tier);
