@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 /**
  * 根组件 - Smart Component
@@ -8,7 +8,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 @Component({
   selector: 'hbg-root',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, RouterOutlet],
   template: `
     <div class="app-container">
       <nav class="navbar">

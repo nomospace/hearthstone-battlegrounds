@@ -12,9 +12,9 @@ import type { Hero } from '../data/hero-data';
 export class HeroService {
   // Signals 状态
   private readonly heroesSignal = signal<Hero[]>(HEROES);
-  private readonly tierFilterSignal = signal<string>('all');
-  private readonly difficultyFilterSignal = signal<string>('all');
-  private readonly sortTypeSignal = signal<'winrate' | 'pickrate'>('winrate');
+  readonly tierFilterSignal = signal<string>('all');
+  readonly difficultyFilterSignal = signal<string>('all');
+  readonly sortTypeSignal = signal<'winrate' | 'pickrate'>('winrate');
 
   // Computed 计算属性 - 自动响应式
   readonly filteredHeroes = computed(() => {
