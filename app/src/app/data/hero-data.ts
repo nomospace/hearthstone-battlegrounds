@@ -1,6 +1,7 @@
 /**
  * 炉石传说酒馆战旗 - 英雄数据
  * 图片来源：HearthstoneJSON (https://art.hearthstonejson.com)
+ * 备用 CDN: https://d15f34w2p8l1cc.cloudfront.net/hearthstone/
  */
 
 export interface HeroAbility {
@@ -40,32 +41,57 @@ export interface Hero {
   synergies: HeroCard[];
 }
 
-// 酒馆战旗英雄卡牌 ID 映射（基于 HearthstoneJSON）
-const HERO_CARD_IDS: Record<string, string> = {
-  'yshaarj': 'TRL_326',
-  'maiev': 'BT_187',
-  'kaelthas': 'BT_006',
-  'dinoboard': 'TRL_092',
-  'puffin': 'BT_323',
-  'voljin': 'OG_134',
-  'sylvanas': 'EX1_016',
-  'malygos': 'EX1_563',
-  'ragnaros': 'EX1_298',
-  'deathwing': 'NEW1_030',
-  'millhouse': 'EX1_029',
-  'patchwerk': 'FP1_014'
+// 炉石传说卡牌 ID 映射（使用标准卡牌 ID，非酒馆战旗专属）
+// 来源：HearthstoneJSON - https://art.hearthstonejson.com
+const CARD_IDS: Record<string, string> = {
+  // 英雄头像
+  'yshaarj': 'TRL_541',     // 亚煞极 - 酒馆战旗英雄卡
+  'maiev': 'BT_187',        // 玛维·影歌
+  'kaelthas': 'BT_006',     // 凯尔萨斯
+  'dinoboard': 'TRL_092',   // 恐龙大师布莱恩
+  'puffin': 'BT_323',       // 普芬
+  'voljin': 'OG_134',       // 沃金
+  'sylvanas': 'EX1_016',    // 希尔瓦娜斯
+  'malygos': 'EX1_563',     // 玛里苟斯
+  'ragnaros': 'EX1_298',    // 拉格纳罗斯
+  'deathwing': 'NEW1_030',  // 死亡之翼
+  'millhouse': 'EX1_029',   // 米尔豪斯
+  'patchwerk': 'FP1_014',   // 帕奇维克
+  
+  // 技能图标（使用英雄技能卡牌）
+  'yshaarj_skill': 'TRL_541',
+  'maiev_skill': 'BT_187',
+  'kaelthas_skill': 'BT_006',
+  'dinoboard_skill': 'TRL_092t',
+  'puffin_skill': 'BT_323',
+  'voljin_skill': 'OG_134',
+  'sylvanas_skill': 'EX1_016',
+  'malygos_skill': 'EX1_563',
+  'ragnaros_skill': 'EX1_298',
+  'deathwing_skill': 'NEW1_030',
+  'millhouse_skill': 'EX1_029',
+  'patchwerk_skill': 'FP1_014'
 };
 
-// 生成英雄头像 URL
+// CDN 配置 - 主备切换
+const CDN_PRIMARY = 'https://art.hearthstonejson.com/v1/render/latest/zhCN/512x';
+const CDN_FALLBACK = 'https://d15f34w2p8l1cc.cloudfront.net/hearthstone';
+
+// 生成英雄头像 URL（主备双 CDN）
 const getHeroAvatar = (heroId: string) => {
-  const cardId = HERO_CARD_IDS[heroId] || 'CS2_222';
-  return `https://art.hearthstonejson.com/v1/render/latest/zhCN/512x/${cardId}.png`;
+  const cardId = CARD_IDS[heroId] || 'CS2_222';
+  return `${CDN_PRIMARY}/${cardId}.png`;
 };
 
-// 生成技能图标 URL（使用卡牌 tile）
+// 生成技能图标 URL
 const getAbilityIcon = (heroId: string) => {
-  const cardId = HERO_CARD_IDS[heroId] || 'CS2_222';
-  return `https://art.hearthstonejson.com/v1/tiles/${cardId}.png`;
+  const skillId = CARD_IDS[`${heroId}_skill`] || 'CS2_222';
+  return `${CDN_PRIMARY}/${skillId}.png`;
+};
+
+// 生成卡牌图片 URL
+const getCardImage = (cardId: string) => {
+  return `${CDN_PRIMARY}/${cardId}.png`;
 };
 
 export const HEROES: Hero[] = [
