@@ -19,8 +19,6 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
         <div class="nav-links">
           <a routerLink="/home" routerLinkActive="active" class="nav-item">首页</a>
           <a routerLink="/heroes" routerLinkActive="active" class="nav-item">英雄</a>
-          <a routerLink="/lineups" routerLinkActive="active" class="nav-item">阵容</a>
-          <a routerLink="/builds" routerLinkActive="active" class="nav-item">流派</a>
         </div>
       </nav>
       

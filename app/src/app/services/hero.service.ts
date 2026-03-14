@@ -1,5 +1,5 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { HEROES, HEROES_BY_WINRATE, getHeroesByTier, getHeroesByDifficulty } from '../data/hero-data';
+import { HEROES, HEROES_BY_WINRATE } from '../data/hero-data';
 import type { Hero } from '../data/hero-data';
 
 /**
@@ -66,34 +66,11 @@ export class HeroService {
   }
 
   /**
-   * 获取所有英雄
-   */
-  getAllHeroes(): Hero[] {
-    return this.heroesSignal();
-  }
-
-  /**
    * 根据 ID 获取英雄 (Signal)
    */
   getHeroByIdSignal(id: string) {
     return computed(() => 
       this.heroesSignal().find(hero => hero.id === id)
     );
-  }
-
-  /**
-   * 根据 ID 获取英雄
-   */
-  getHeroById(id: string): Hero | undefined {
-    return this.heroesSignal().find(hero => hero.id === id);
-  }
-
-  /**
-   * 重置筛选条件
-   */
-  resetFilters(): void {
-    this.tierFilterSignal.set('all');
-    this.difficultyFilterSignal.set('all');
-    this.sortTypeSignal.set('winrate');
   }
 }

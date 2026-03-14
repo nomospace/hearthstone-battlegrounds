@@ -579,8 +579,10 @@ export const HEROES: Hero[] = [
   }
 ];
 
+// 排序后的英雄列表
 export const HEROES_BY_WINRATE = [...HEROES].sort((a, b) => b.winRate - a.winRate);
 export const HEROES_BY_PICKRATE = [...HEROES].sort((a, b) => b.pickRate - a.pickRate);
+
+// 筛选工具函数
 export const getHeroesByDifficulty = (difficulty: string) => HEROES.filter(h => h.difficulty === difficulty);
-export const getHeroesByBuild = (build: string) => HEROES.filter(h => h.bestBuilds.includes(build) || h.bestBuilds.includes('任意'));
 export const getHeroesByTier = (tier: string) => HEROES.filter(h => h.tier === tier);

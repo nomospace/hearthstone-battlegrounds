@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { HEROES, HEROES_BY_WINRATE, HEROES_BY_PICKRATE } from '../../data/hero-data';
+import { HEROES, HEROES_BY_WINRATE } from '../../data/hero-data';
 
 @Component({
   selector: 'hbg-home',
