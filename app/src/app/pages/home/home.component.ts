@@ -85,10 +85,15 @@ import { HEROES, HEROES_BY_WINRATE } from '../../data/hero-data';
             <div class="nav-title">英雄大全</div>
             <div class="nav-desc">查看所有英雄详情</div>
           </a>
-          <a routerLink="/counter" class="nav-card">
-            <div class="nav-icon">🎯</div>
-            <div class="nav-title">英雄计数器</div>
-            <div class="nav-desc">对局中记录英雄</div>
+          <a routerLink="/matches" class="nav-card">
+            <div class="nav-icon">🎬</div>
+            <div class="nav-title">比赛集锦</div>
+            <div class="nav-desc">精彩对局回放</div>
+          </a>
+          <a routerLink="/daily" class="nav-card">
+            <div class="nav-icon">🎲</div>
+            <div class="nav-title">每日推荐</div>
+            <div class="nav-desc">今日幸运英雄</div>
           </a>
         </div>
       </section>

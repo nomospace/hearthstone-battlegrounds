@@ -76,6 +76,16 @@ import { HeroService } from '../../services/hero.service';
               <div class="tier-badge">{{ hero.tier }}</div>
             </div>
             
+            <div class="hero-ability">
+              <div class="ability-icon">
+                <img [src]="hero.ability.icon" [alt]="hero.ability.name" class="ability-icon-img" (error)="handleAbilityImageError($event)">
+              </div>
+              <div class="ability-info">
+                <div class="ability-name">{{ hero.ability.name }}</div>
+                <div class="ability-cost">💰 {{ hero.ability.cost }}</div>
+              </div>
+            </div>
+            
             <div class="hero-stats">
               <div class="stat-item">
                 <div class="stat-value">{{ hero.winRate }}%</div>
@@ -245,6 +255,51 @@ import { HeroService } from '../../services/hero.service';
       margin-bottom: 1rem;
     }
     
+    .hero-ability {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.8rem;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+    
+    .ability-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(243, 156, 18, 0.2);
+      border-radius: 8px;
+      border: 2px solid #f39c12;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    
+    .ability-icon-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .ability-info {
+      flex: 1;
+    }
+    
+    .ability-name {
+      font-weight: bold;
+      font-size: 0.95rem;
+      color: #f39c12;
+    }
+    
+    .ability-cost {
+      font-size: 0.85rem;
+      opacity: 0.8;
+      margin-top: 0.2rem;
+    }
+    
     .hero-avatar {
       width: 80px;
       height: 80px;
@@ -403,6 +458,16 @@ export class HeroesComponent {
     if (parent) {
       parent.style.background = 'rgba(243, 156, 18, 0.3)';
       parent.innerHTML = '🦸';
+    }
+  }
+  
+  handleAbilityImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.style.display = 'none';
+    const parent = img.parentElement;
+    if (parent) {
+      parent.style.background = 'rgba(243, 156, 18, 0.3)';
+      parent.innerHTML = '⚡';
     }
   }
 }

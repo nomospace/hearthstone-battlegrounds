@@ -31,10 +31,11 @@ export class HeroService {
       result = result.filter(hero => hero.difficulty === difficulty);
     }
 
+    // 更新：使用 stats 对象中的字段
     if (sortType === 'winrate') {
-      result.sort((a, b) => b.winRate - a.winRate);
+      result.sort((a, b) => b.stats.winRate - a.stats.winRate);
     } else {
-      result.sort((a, b) => b.pickRate - a.pickRate);
+      result.sort((a, b) => b.stats.pickRate - a.stats.pickRate);
     }
 
     return result;

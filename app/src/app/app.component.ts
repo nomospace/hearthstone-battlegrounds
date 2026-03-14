@@ -29,7 +29,8 @@ import { DOCUMENT } from '@angular/common';
         <div class="nav-links">
           <a routerLink="/home" routerLinkActive="active" class="nav-item">首页</a>
           <a routerLink="/heroes" routerLinkActive="active" class="nav-item">英雄</a>
-          <a routerLink="/counter" routerLinkActive="active" class="nav-item">计数器</a>
+          <a routerLink="/matches" routerLinkActive="active" class="nav-item">比赛</a>
+          <a routerLink="/daily" routerLinkActive="active" class="nav-item">每日</a>
         </div>
       </nav>
       
