@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HEROES, HEROES_BY_WINRATE, HEROES_BY_PICKRATE } from '../../data/hero-data';
-import { BUILD_GUIDES } from '../../data/build-data';
 
 @Component({
   selector: 'hbg-home',
@@ -10,8 +9,8 @@ import { BUILD_GUIDES } from '../../data/build-data';
   template: `
     <div class="home">
       <section class="hero-section">
-        <h2>🔥 欢迎来到酒馆战旗攻略</h2>
-        <p class="subtitle">最全面的英雄/流派/打法指南</p>
+        <h2>🍺 欢迎来到酒馆战棋攻略</h2>
+        <p class="subtitle">最全面的英雄/技能/配合指南</p>
       </section>
       
       <section class="stats-section">
@@ -20,12 +19,12 @@ import { BUILD_GUIDES } from '../../data/build-data';
           <div class="stat-label">英雄</div>
         </div>
         <div class="stat-card">
-          <div class="stat-number">{{ builds.length }}</div>
-          <div class="stat-label">流派</div>
-        </div>
-        <div class="stat-card">
           <div class="stat-number">T0-T3</div>
           <div class="stat-label">强度分级</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">100+</div>
+          <div class="stat-label">卡牌配合</div>
         </div>
       </section>
       
@@ -33,36 +32,69 @@ import { BUILD_GUIDES } from '../../data/build-data';
         <h3>🏆 热门英雄 TOP5</h3>
         <div class="hero-list">
           @for (hero of topHeroes; track hero.id) {
-            <div class="hero-card" [class]="'tier-' + hero.tier.toLowerCase()">
-              <div class="hero-rank">{{ $index + 1 }}</div>
-              <div class="hero-info">
-                <div class="hero-name">{{ hero.name }}</div>
-                <div class="hero-stats">
-                  <span class="stat">胜率 {{ hero.winRate }}%</span>
-                  <span class="stat">选择率 {{ hero.pickRate }}%</span>
+            <a [routerLink]="['/heroes', hero.id]" class="hero-link">
+              <div class="hero-card" [class]="'tier-' + hero.tier.toLowerCase()">
+                <img [src]="hero.avatar" [alt]="hero.name" class="hero-avatar" (error)="handleImageError($event)">
+                <div class="hero-rank">{{ $index + 1 }}</div>
+                <div class="hero-info">
+                  <div class="hero-name">{{ hero.name }}</div>
+                  <div class="hero-stats">
+                    <span class="stat">胜率 {{ hero.winRate }}%</span>
+                    <span class="stat">选择率 {{ hero.pickRate }}%</span>
+                  </div>
                 </div>
+                <div class="hero-tier">{{ hero.tier }}</div>
               </div>
-              <div class="hero-tier">{{ hero.tier }}</div>
-            </div>
+            </a>
           }
         </div>
-        <a routerLink="/heroes" class="view-all">查看全部英雄 →</a>
+        <a routerLink="/heroes" class="view-all">查看全部 {{ heroes.length }} 位英雄 →</a>
       </section>
       
-      <section class="top-builds">
-        <h3>⚔️ 推荐流派</h3>
-        <div class="build-grid">
-          @for (build of topBuilds; track build.id) {
-            <div class="build-card" [class]="'tier-' + build.tier.toLowerCase()">
-              <div class="build-name">{{ build.name }}</div>
-              <div class="build-desc">{{ build.description }}</div>
-              <div class="build-meta">
-                <span class="difficulty">难度：{{ build.difficulty }}</span>
+      <section class="features-section">
+        <h3>📚 攻略内容</h3>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🦸</div>
+            <h4>英雄大全</h4>
+            <p>所有英雄的详细信息，包括技能、胜率、选择率</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h4>技能解析</h4>
+            <p>每个英雄技能的详细用法和时机</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <h4>配合推荐</h4>
+            <p>每个英雄的最佳配合卡牌和打法思路</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h4>强度分级</h4>
+            <p>T0-T3 强度排名，帮你快速选择</p>
+          </div>
+        </div>
+      </section>
+      
+      <section class="tier-overview">
+        <h3>📊 强度分级概览</h3>
+        <div class="tier-grid">
+          @for (tier of tiers; track tier.name) {
+            <div class="tier-card" [class]="'tier-' + tier.class">
+              <div class="tier-header">
+                <span class="tier-name">{{ tier.name }}</span>
+                <span class="tier-count">{{ tier.count }} 位</span>
+              </div>
+              <div class="tier-desc">{{ tier.desc }}</div>
+              <div class="tier-heroes">
+                @for (hero of getHeroesByTier(tier.name); track hero.id) {
+                  <a [routerLink]="['/heroes', hero.id]" class="tier-hero-tag">{{ hero.name }}</a>
+                }
               </div>
             </div>
           }
         </div>
-        <a routerLink="/builds" class="view-all">查看全部流派 →</a>
       </section>
     </div>
   `,
@@ -133,6 +165,11 @@ import { BUILD_GUIDES } from '../../data/build-data';
       gap: 1rem;
     }
     
+    .hero-link {
+      text-decoration: none;
+      color: inherit;
+    }
+    
     .hero-card {
       display: flex;
       align-items: center;
@@ -141,6 +178,12 @@ import { BUILD_GUIDES } from '../../data/build-data';
       background: rgba(255, 255, 255, 0.1);
       border-radius: 12px;
       border-left: 4px solid transparent;
+      transition: transform 0.2s, background 0.2s;
+    }
+    
+    .hero-card:hover {
+      transform: translateX(5px);
+      background: rgba(255, 255, 255, 0.15);
     }
     
     .hero-card.tier-t0 { border-left-color: #f39c12; }
@@ -148,11 +191,20 @@ import { BUILD_GUIDES } from '../../data/build-data';
     .hero-card.tier-t2 { border-left-color: #2ecc71; }
     .hero-card.tier-t3 { border-left-color: #95a5a6; }
     
+    .hero-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #f39c12;
+    }
+    
     .hero-rank {
       font-size: 1.5rem;
       font-weight: bold;
       width: 40px;
       text-align: center;
+      color: #f39c12;
     }
     
     .hero-info {
@@ -183,41 +235,109 @@ import { BUILD_GUIDES } from '../../data/build-data';
     .tier-t2 .hero-tier { background: #2ecc71; }
     .tier-t3 .hero-tier { background: #95a5a6; }
     
-    .build-grid {
+    .features-section {
+      margin: 4rem 0;
+    }
+    
+    .features-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
     }
     
-    .build-card {
-      padding: 1.5rem;
+    .feature-card {
       background: rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      border-left: 4px solid transparent;
+      padding: 2rem;
+      border-radius: 16px;
+      text-align: center;
+      transition: transform 0.2s;
     }
     
-    .build-card.tier-t0 { border-left-color: #f39c12; }
-    .build-card.tier-t1 { border-left-color: #3498db; }
-    .build-card.tier-t2 { border-left-color: #2ecc71; }
-    .build-card.tier-t3 { border-left-color: #95a5a6; }
-    
-    .build-name {
-      font-size: 1.3rem;
-      font-weight: bold;
-      margin-bottom: 0.5rem;
+    .feature-card:hover {
+      transform: translateY(-5px);
     }
     
-    .build-desc {
-      opacity: 0.8;
+    .feature-icon {
+      font-size: 3rem;
       margin-bottom: 1rem;
     }
     
-    .difficulty {
-      font-size: 0.9rem;
-      padding: 0.3rem 0.8rem;
+    .feature-card h4 {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+      color: #f39c12;
+    }
+    
+    .feature-card p {
+      opacity: 0.8;
+      font-size: 0.95rem;
+    }
+    
+    .tier-overview {
+      margin: 4rem 0;
+    }
+    
+    .tier-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .tier-card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1.5rem;
+      border-radius: 16px;
+      border-left: 4px solid transparent;
+    }
+    
+    .tier-card.tier-t0 { border-left-color: #f39c12; }
+    .tier-card.tier-t1 { border-left-color: #3498db; }
+    .tier-card.tier-t2 { border-left-color: #2ecc71; }
+    .tier-card.tier-t3 { border-left-color: #95a5a6; }
+    
+    .tier-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    
+    .tier-name {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    
+    .tier-count {
       background: rgba(255, 255, 255, 0.2);
+      padding: 0.3rem 0.8rem;
+      border-radius: 12px;
+      font-size: 0.9rem;
+    }
+    
+    .tier-desc {
+      opacity: 0.7;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+    
+    .tier-heroes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .tier-hero-tag {
+      padding: 0.3rem 0.8rem;
+      background: rgba(255, 255, 255, 0.15);
       border-radius: 20px;
-      display: inline-block;
+      font-size: 0.85rem;
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.2s;
+    }
+    
+    .tier-hero-tag:hover {
+      background: rgba(255, 255, 255, 0.25);
     }
     
     .view-all {
@@ -241,12 +361,41 @@ import { BUILD_GUIDES } from '../../data/build-data';
       .stats-section {
         grid-template-columns: 1fr;
       }
+      
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .tier-grid {
+        grid-template-columns: 1fr;
+      }
     }
   `]
 })
 export class HomeComponent {
   heroes = HEROES;
-  builds = BUILD_GUIDES;
   topHeroes = HEROES_BY_WINRATE.slice(0, 5);
-  topBuilds = BUILD_GUIDES.filter(b => b.tier === 'T0' || b.tier === 'T1');
+  
+  tiers = [
+    { name: 'T0', class: 't0', count: 0, desc: '版本答案，无脑选' },
+    { name: 'T1', class: 't1', count: 0, desc: '强度在线，稳定上分' },
+    { name: 'T2', class: 't2', count: 0, desc: '有特定配合时可选' },
+    { name: 'T3', class: 't3', count: 0, desc: '娱乐为主，慎选' }
+  ];
+  
+  constructor() {
+    // 计算每个分级的英雄数量
+    this.tiers.forEach(tier => {
+      tier.count = this.heroes.filter(h => h.tier === tier.name).length;
+    });
+  }
+  
+  getHeroesByTier(tier: string) {
+    return this.heroes.filter(h => h.tier === tier);
+  }
+  
+  handleImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.style.display = 'none';
+  }
 }
