@@ -24,7 +24,7 @@ import type { Hero } from '../../data/hero-data';
             <div class="modal-caption">{{ modalImageTitle() }}</div>
           </div>
         }
-        
+
         <!-- 英雄头部 -->
         <div class="hero-header-section">
           <div class="hero-avatar-wrapper">
@@ -32,7 +32,7 @@ import type { Hero } from '../../data/hero-data';
             <div class="tier-badge tier-{{ heroData.tier.toLowerCase() }}">{{ heroData.tier }}</div>
             <div class="click-hint">🔍 点击放大</div>
           </div>
-          
+
           <div class="hero-info">
             <h2>{{ heroData.name }}</h2>
             <p class="hero-english">{{ heroData.nameEn }}</p>
@@ -96,8 +96,9 @@ import type { Hero } from '../../data/hero-data';
           </ul>
         </section>
 
-        <div class="back-link">
-          <a routerLink="/heroes">← 返回英雄列表</a>
+        <div class="back-links">
+          <a routerLink="/heroes" class="back-link">← 返回英雄列表</a>
+          <a routerLink="/home" class="back-link">🏠 返回首页</a>
         </div>
       </div>
     }
@@ -120,7 +121,7 @@ import type { Hero } from '../../data/hero-data';
     .hero-avatar-wrapper {
       position: relative;
     }
-    
+
     .click-hint {
       position: absolute;
       bottom: -25px;
@@ -130,7 +131,7 @@ import type { Hero } from '../../data/hero-data';
       opacity: 0.6;
       white-space: nowrap;
     }
-    
+
     /* 图片查看器 Modal */
     .image-modal-overlay {
       position: fixed;
@@ -144,14 +145,14 @@ import type { Hero } from '../../data/hero-data';
       align-items: center;
       justify-content: center;
     }
-    
+
     .image-modal {
       position: relative;
       max-width: 90vw;
       max-height: 90vh;
       animation: modalZoomIn 0.3s ease-out;
     }
-    
+
     @keyframes modalZoomIn {
       from {
         transform: scale(0.8);
@@ -162,14 +163,14 @@ import type { Hero } from '../../data/hero-data';
         opacity: 1;
       }
     }
-    
+
     .modal-image {
       max-width: 100%;
       max-height: 80vh;
       border-radius: 12px;
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
     }
-    
+
     .modal-caption {
       text-align: center;
       color: #fff;
@@ -177,7 +178,7 @@ import type { Hero } from '../../data/hero-data';
       font-size: 1.2rem;
       font-weight: bold;
     }
-    
+
     .modal-close {
       position: absolute;
       top: -40px;
@@ -190,7 +191,7 @@ import type { Hero } from '../../data/hero-data';
       padding: 0.5rem;
       transition: transform 0.2s;
     }
-    
+
     .modal-close:hover {
       transform: scale(1.2);
     }
@@ -314,11 +315,11 @@ import type { Hero } from '../../data/hero-data';
       border-left: 4px solid transparent;
       transition: transform 0.2s;
     }
-    
+
     .card-item:hover {
       transform: translateY(-2px);
     }
-    
+
     .card-image-wrapper {
       width: 100px;
       height: 140px;
@@ -330,13 +331,13 @@ import type { Hero } from '../../data/hero-data';
       border-radius: 8px;
       overflow: hidden;
     }
-    
+
     .card-image {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
-    
+
     .card-content {
       flex: 1;
       min-width: 0;
@@ -407,19 +408,26 @@ import type { Hero } from '../../data/hero-data';
       border-left: 3px solid #2ecc71;
     }
 
-    .back-link {
+    .back-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
       margin-top: 2rem;
-      text-align: center;
     }
-
-    .back-link a {
+    
+    .back-link {
       color: #f39c12;
       text-decoration: none;
       font-size: 1.1rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      background: rgba(243, 156, 18, 0.1);
+      transition: all 0.2s;
     }
-
-    .back-link a:hover {
-      text-decoration: underline;
+    
+    .back-link:hover {
+      background: rgba(243, 156, 18, 0.2);
+      text-decoration: none;
     }
 
     @media (max-width: 768px) {
@@ -444,11 +452,11 @@ import type { Hero } from '../../data/hero-data';
       .ability-icon {
         margin: 0 auto;
       }
-      
+
       .card-item {
         flex-direction: column;
       }
-      
+
       .card-image-wrapper {
         width: 100%;
         height: 140px;
@@ -461,19 +469,19 @@ export class HeroDetailComponent {
   readonly heroId = input.required<string>();
 
   readonly hero = this.heroService.getHeroByIdSignal(this.heroId());
-  
+
   // 图片查看器
   readonly showImageModal = signal<boolean>(false);
   readonly modalImageUrl = signal<string>('');
   readonly modalImageTitle = signal<string>('');
-  
+
   openImageModal(imageUrl: string, title: string): void {
     this.modalImageUrl.set(imageUrl);
     this.modalImageTitle.set(title);
     this.showImageModal.set(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-  
+
   closeImageModal(): void {
     this.showImageModal.set(false);
   }
@@ -497,7 +505,7 @@ export class HeroDetailComponent {
       parent.innerHTML = '🃏';
     }
   }
-  
+
   handleModalImageError(event: Event): void {
     console.error('Modal image load failed:', event);
     alert('图片加载失败，可能是网络问题或图片链接失效');

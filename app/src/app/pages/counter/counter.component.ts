@@ -81,8 +81,9 @@ import { HEROES } from '../../data/hero-data';
         </div>
       </div>
       
-      <div class="back-home">
-        <a routerLink="/home" class="back-link">← 返回首页</a>
+      <div class="back-links">
+        <a routerLink="/heroes" class="back-link">← 返回英雄列表</a>
+        <a routerLink="/home" class="back-link">🏠 返回首页</a>
       </div>
     </div>
   `,
@@ -289,8 +290,10 @@ import { HEROES } from '../../data/hero-data';
     .tier-badge.tier-t2 { background: #2ecc71; }
     .tier-badge.tier-t3 { background: #95a5a6; }
     
-    .back-home {
-      text-align: center;
+    .back-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
       margin-top: 2rem;
     }
     
@@ -298,10 +301,14 @@ import { HEROES } from '../../data/hero-data';
       color: #f39c12;
       text-decoration: none;
       font-size: 1.1rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s;
     }
     
     .back-link:hover {
-      text-decoration: underline;
+      background: rgba(243, 156, 18, 0.2);
+      text-decoration: none;
     }
     
     @media (max-width: 768px) {

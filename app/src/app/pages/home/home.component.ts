@@ -77,6 +77,22 @@ import { HEROES, HEROES_BY_WINRATE } from '../../data/hero-data';
         </div>
       </section>
       
+      <section class="quick-nav">
+        <h3>🧭 快速导航</h3>
+        <div class="nav-cards">
+          <a routerLink="/heroes" class="nav-card">
+            <div class="nav-icon">🦸</div>
+            <div class="nav-title">英雄大全</div>
+            <div class="nav-desc">查看所有英雄详情</div>
+          </a>
+          <a routerLink="/counter" class="nav-card">
+            <div class="nav-icon">🎯</div>
+            <div class="nav-title">英雄计数器</div>
+            <div class="nav-desc">对局中记录英雄</div>
+          </a>
+        </div>
+      </section>
+      
       <section class="tier-overview">
         <h3>📊 强度分级概览</h3>
         <div class="tier-grid">
@@ -351,6 +367,50 @@ import { HEROES, HEROES_BY_WINRATE } from '../../data/hero-data';
     
     .view-all:hover {
       text-decoration: underline;
+    }
+    
+    .quick-nav {
+      margin: 3rem 0;
+    }
+    
+    .nav-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .nav-card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2rem;
+      border-radius: 16px;
+      text-align: center;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s;
+      border: 2px solid transparent;
+    }
+    
+    .nav-card:hover {
+      transform: translateY(-5px);
+      border-color: #f39c12;
+      background: rgba(255, 255, 255, 0.15);
+    }
+    
+    .nav-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    
+    .nav-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #f39c12;
+      margin-bottom: 0.5rem;
+    }
+    
+    .nav-desc {
+      opacity: 0.8;
+      font-size: 0.95rem;
     }
     
     @media (max-width: 768px) {

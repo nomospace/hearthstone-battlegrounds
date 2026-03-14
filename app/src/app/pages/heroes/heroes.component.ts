@@ -12,7 +12,10 @@ import { HeroService } from '../../services/hero.service';
   imports: [RouterLink],
   template: `
     <div class="heroes-page">
-      <h2>🏆 英雄大全</h2>
+      <div class="page-header">
+        <h2>🏆 英雄大全</h2>
+        <a routerLink="/home" class="back-home-link">🏠 返回首页</a>
+      </div>
       
       <div class="filters">
         <div class="filter-group">
@@ -134,9 +137,31 @@ import { HeroService } from '../../services/hero.service';
       max-width: 1400px;
     }
     
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
     h2 {
       font-size: 2rem;
-      margin-bottom: 1.5rem;
+      margin: 0;
+    }
+    
+    .back-home-link {
+      color: #f39c12;
+      text-decoration: none;
+      font-size: 1rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      background: rgba(243, 156, 18, 0.1);
+      transition: all 0.2s;
+    }
+    
+    .back-home-link:hover {
+      background: rgba(243, 156, 18, 0.2);
+      text-decoration: none;
     }
     
     .filters {
