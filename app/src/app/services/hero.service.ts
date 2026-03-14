@@ -73,4 +73,11 @@ export class HeroService {
       this.heroesSignal().find(hero => hero.id === id)
     );
   }
+  
+  /**
+   * 获取所有英雄（用于计数器）
+   */
+  getAllHeroes(): Hero[] {
+    return this.heroesSignal();
+  }
 }

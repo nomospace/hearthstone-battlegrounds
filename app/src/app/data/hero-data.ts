@@ -39,6 +39,14 @@ export interface Hero {
   tips: string[];
   ability: HeroAbility;
   synergies: HeroCard[];
+  // 新增：对局数据
+  gamesPlayed?: number;     // 对局数
+  top4Rate?: number;        // 前四率
+  // 新增：克制关系
+  counters?: string[];      // 克制哪些英雄
+  counteredBy?: string[];   // 被哪些英雄克制
+  // 新增：强势期
+  powerSpikes?: string[];   // 如 "3 本", "5 本", "6 本"
 }
 
 // 炉石传说卡牌 ID 映射（使用标准卡牌 ID，非酒馆战旗专属）
@@ -105,11 +113,16 @@ export const HEROES: Hero[] = [
     winRate: 58.5,
     pickRate: 15.2,
     avgPlacement: 3.2,
+    gamesPlayed: 15280,
+    top4Rate: 62.3,
     difficulty: '中等',
     playstyle: ['经济运营', '节奏型'],
     bestBuilds: ['任意', '恶魔', '野兽'],
     description: '战吼额外触发一次，万能引擎，适配几乎所有流派',
     tips: ['优先找高价值战吼随从', '6 本后强度质变', '注意经济节奏'],
+    powerSpikes: ['4 本', '6 本'],
+    counters: ['米尔豪斯', '帕奇维克'],
+    counteredBy: ['玛维·影歌'],
     ability: {
       name: '亚煞极之触',
       nameEn: 'Touch of Y\'Shaarj',
