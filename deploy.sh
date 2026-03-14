@@ -34,7 +34,18 @@ sudo chmod -R 755 ${NGINX_ROOT}
 echo "🔄 重载 Nginx..."
 sudo nginx -t && sudo nginx -s reload
 
-# 6. 验证部署
+# 6. 注入部署时间戳
+echo "🕐 注入部署时间戳..."
+DEPLOY_TIME=$(date '+%Y-%m-%d %H:%M:%S %Z')
+if [ -f "${NGINX_ROOT}/index.html" ]; then
+    # 在 </body> 前添加部署时间（页面底部可见）
+    sudo sed -i "s|</body>|<div style=\"position:fixed;bottom:5px;right:10px;font-size:11px;opacity:0.5;z-index:9999;\">🦞 部署时间：${DEPLOY_TIME}</div></body>|g" ${NGINX_ROOT}/index.html
+    # 同时在 HTML 注释中添加（方便查看源码）
+    sudo sed -i "s|</html>|<!-- 🦞 部署时间：${DEPLOY_TIME} --></html>|g" ${NGINX_ROOT}/index.html
+    echo "   部署时间：${DEPLOY_TIME}"
+fi
+
+# 7. 验证部署
 echo "✅ 验证部署..."
 HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:80)
 if [ "$HTTP_CODE" = "200" ]; then
