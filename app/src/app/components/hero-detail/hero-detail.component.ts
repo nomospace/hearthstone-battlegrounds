@@ -20,7 +20,7 @@ import type { Hero } from '../../data/hero-data';
           <div class="image-modal-overlay" (click)="closeImageModal()"></div>
           <div class="image-modal">
             <button class="modal-close" (click)="closeImageModal()">✕</button>
-            <img [src]="modalImageUrl()" [alt]="modalImageTitle()" class="modal-image">
+            <img [src]="modalImageUrl()" [alt]="modalImageTitle()" class="modal-image" (error)="handleModalImageError($event)">
             <div class="modal-caption">{{ modalImageTitle() }}</div>
           </div>
         }
@@ -28,9 +28,9 @@ import type { Hero } from '../../data/hero-data';
         <!-- 英雄头部 -->
         <div class="hero-header-section">
           <div class="hero-avatar-wrapper">
-            <img [src]="heroData.avatar" [alt]="heroData.name" class="hero-avatar-img" (error)="handleImageError($event)" (click)="openImageModal(heroData.avatar, heroData.name)" style="cursor: pointer;">
+            <img [src]="heroData.avatar" [alt]="heroData.name" class="hero-avatar-img" (error)="handleImageError($event)" (click)="openImageModal(heroData.avatar, heroData.name)" style="cursor: pointer;" title="点击查看大图">
             <div class="tier-badge tier-{{ heroData.tier.toLowerCase() }}">{{ heroData.tier }}</div>
-            <div class="click-hint">点击查看大图</div>
+            <div class="click-hint">🔍 点击放大</div>
           </div>
           
           <div class="hero-info">
@@ -496,6 +496,11 @@ export class HeroDetailComponent {
       parent.style.background = 'rgba(100, 100, 100, 0.3)';
       parent.innerHTML = '🃏';
     }
+  }
+  
+  handleModalImageError(event: Event): void {
+    console.error('Modal image load failed:', event);
+    alert('图片加载失败，可能是网络问题或图片链接失效');
   }
 
   getCardTierClass(tier: number): string {
