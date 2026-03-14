@@ -1,46 +1,46 @@
 #!/bin/bash
-# deploy.sh - 酒馆战旗攻略部署脚本
+# 🦞 一键部署脚本 - Angular 项目 → Nginx
+# 用法：./deploy.sh
 
 set -e
 
-MESSAGE=${1:-"🦞 deploy $(date +%Y-%m-%d_%H:%M)"}
+PROJECT_NAME="hearthstone-battlegrounds"
+DIST_DIR="app/dist/${PROJECT_NAME}/browser"
+NGINX_ROOT="/var/www/${PROJECT_NAME}/browser"
 
-cd "$(dirname "$0")"
+echo "🦞 开始部署 ${PROJECT_NAME}..."
 
-echo "🚀 炉石传说酒馆战旗攻略 部署工具"
-echo "=================================="
-echo ""
+# 1. 检查构建产物是否存在
+if [ ! -d "$DIST_DIR" ]; then
+    echo "❌ 构建产物不存在：$DIST_DIR"
+    echo "💡 请先运行：cd app && npm run build"
+    exit 1
+fi
 
-echo "🔨 步骤 1/3: 构建静态文件..."
-cd app
-npm run build
-cd ..
+# 2. 清理旧文件
+echo "🧹 清理旧部署..."
+sudo rm -rf ${NGINX_ROOT}/*
 
-echo ""
-echo "📝 步骤 2/3: 提交构建产物..."
-git add -A
-git commit -m "$MESSAGE" || echo "⚠️  没有需要提交的更改"
+# 3. 同步新文件
+echo "📦 同步构建产物..."
+sudo cp -r ${DIST_DIR}/* ${NGINX_ROOT}/
 
-echo ""
-echo "📤 步骤 3/3: 推送到 GitHub..."
-for i in $(seq 1 5); do 
-  echo "=== 尝试 $i/5 ==="
-  if git push origin main 2>&1; then
-    echo "✅ 推送成功!"
-    break
-  else
-    echo "❌ 失败，等待 2 秒后重试..."
-    sleep 2
-  fi
-done
+# 4. 设置权限
+echo "🔐 设置权限..."
+sudo chown -R nginx:nginx ${NGINX_ROOT}
+sudo chmod -R 755 ${NGINX_ROOT}
 
-echo ""
-echo "=================================="
-echo "✅ 部署完成！"
-echo ""
-echo "📱 访问地址："
-echo "   https://nomospace.github.io/hearthstone-battlegrounds/"
-echo ""
-echo "📊 查看构建状态："
-echo "   https://github.com/nomospace/hearthstone-battlegrounds/actions"
-echo ""
+# 5. 重载 Nginx
+echo "🔄 重载 Nginx..."
+sudo nginx -t && sudo nginx -s reload
+
+# 6. 验证部署
+echo "✅ 验证部署..."
+HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:80)
+if [ "$HTTP_CODE" = "200" ]; then
+    echo "🎉 部署成功！"
+    echo "🌐 访问地址：http://localhost:80"
+else
+    echo "⚠️  部署完成但 HTTP 状态码异常：$HTTP_CODE"
+    exit 1
+fi
