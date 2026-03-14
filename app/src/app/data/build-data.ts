@@ -21,6 +21,7 @@ export interface CoreCard {
   tier: number | string;
   description: string;
   priority: '核心' | '重要' | '过渡';
+  imageUrl?: string;
 }
 
 export interface GamePlan {
@@ -39,11 +40,11 @@ export const BUILD_GUIDES: BuildGuide[] = [
     difficulty: '简单',
     description: '最稳定流派，养身材 + 跳操，新手推荐',
     coreCards: [
-      { name: '普芬', tier: 6, description: '野兽流核心，发现野兽', priority: '核心' },
-      { name: '跳操组件', tier: 5, description: '瑞文/亡语长者', priority: '核心' },
-      { name: '狂战斧', tier: 5, description: '多段攻击', priority: '核心' },
-      { name: '熊妈妈', tier: 4, description: '身材 buff', priority: '重要' },
-      { name: '老鹰', tier: 3, description: '发现野兽', priority: '过渡' }
+      { name: '普芬', tier: 6, description: '野兽流核心，发现野兽', priority: '核心', imageUrl: 'https://art.hearthstonejson.com/v1/render/latest/zhCN/512x/BT_323.png' },
+      { name: '瑞文戴尔男爵', tier: 5, description: '亡语触发额外一次', priority: '核心', imageUrl: 'https://art.hearthstonejson.com/v1/render/latest/zhCN/512x/FP1_031.png' },
+      { name: '狂战斧', tier: 5, description: '风怒，多段攻击', priority: '核心', imageUrl: 'https://art.hearthstonejson.com/v1/render/latest/zhCN/512x/EX1_411.png' },
+      { name: '熊妈妈', tier: 4, description: '野兽获得 +2/+2', priority: '重要', imageUrl: 'https://art.hearthstonejson.com/v1/render/latest/zhCN/512x/LOE_061.png' },
+      { name: '老鹰', tier: 3, description: '战吼：发现一个野兽', priority: '过渡', imageUrl: 'https://art.hearthstonejson.com/v1/render/latest/zhCN/512x/LOE_050.png' }
     ],
     gamePlan: {
       early: '找野兽过渡，优先身材 buff',

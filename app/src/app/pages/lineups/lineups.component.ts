@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LINEUPS, getLineupsByTier, getLineupsByBuild } from '../../data/lineup-data';
 import type { Lineup } from '../../data/lineup-data';
@@ -12,6 +12,16 @@ import type { Lineup } from '../../data/lineup-data';
   imports: [CommonModule],
   template: `
     <div class="lineups-page">
+      <!-- 图片放大查看器 -->
+      @if (showImageModal()) {
+        <div class="image-modal-overlay" (click)="closeImageModal()"></div>
+        <div class="image-modal">
+          <button class="modal-close" (click)="closeImageModal()">✕</button>
+          <img [src]="modalImageUrl()" [alt]="modalImageTitle()" class="modal-image">
+          <div class="modal-caption">{{ modalImageTitle() }}</div>
+        </div>
+      }
+      
       <h2>⚔️ 热门阵容库</h2>
       
       <div class="filters">
@@ -76,7 +86,9 @@ import type { Lineup } from '../../data/lineup-data';
               <div class="cards-list">
                 @for (card of getCoreCards(lineup); track card.name) {
                   <div class="card-item core-{{ card.core }}">
-                    <img [src]="card.imageUrl" [alt]="card.name" class="card-image" (error)="handleCardImageError($event)" *ngIf="card.imageUrl">
+                    @if (card.imageUrl) {
+                      <img [src]="card.imageUrl" [alt]="card.name" class="card-image" (error)="handleCardImageError($event)" (click)="openImageModal(card.imageUrl!, card.name)" style="cursor: pointer;" title="点击查看大图">
+                    }
                     <div class="card-info">
                       <span class="card-tier">T{{ card.tier }}</span>
                       <span class="card-name">{{ card.name }}</span>
@@ -296,6 +308,75 @@ import type { Lineup } from '../../data/lineup-data';
       object-fit: cover;
       border-radius: 4px;
       background: rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s;
+    }
+    
+    .card-image:hover {
+      transform: scale(1.1);
+    }
+    
+    /* 图片查看器 Modal */
+    .image-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .image-modal {
+      position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
+      animation: modalZoomIn 0.3s ease-out;
+    }
+    
+    @keyframes modalZoomIn {
+      from {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    
+    .modal-image {
+      max-width: 100%;
+      max-height: 80vh;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+    
+    .modal-caption {
+      text-align: center;
+      color: #fff;
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    
+    .modal-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      transition: transform 0.2s;
+    }
+    
+    .modal-close:hover {
+      transform: scale(1.2);
     }
 
     .card-info {
@@ -399,6 +480,22 @@ import type { Lineup } from '../../data/lineup-data';
 export class LineupsComponent {
   readonly tierFilter = signal<string>('all');
   readonly buildFilter = signal<string>('all');
+  
+  // 图片查看器
+  readonly showImageModal = signal<boolean>(false);
+  readonly modalImageUrl = signal<string>('');
+  readonly modalImageTitle = signal<string>('');
+  
+  openImageModal(imageUrl: string, title: string): void {
+    this.modalImageUrl.set(imageUrl);
+    this.modalImageTitle.set(title);
+    this.showImageModal.set(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  
+  closeImageModal(): void {
+    this.showImageModal.set(false);
+  }
 
   readonly tiers = ['all', 'T0', 'T1', 'T2'];
   readonly builds = ['all', '野兽', '元素', '恶魔', '机械', '龙族', '亡语'];

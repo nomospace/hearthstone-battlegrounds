@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { HeroService } from '../../services/hero.service';
@@ -15,11 +15,22 @@ import type { Hero } from '../../data/hero-data';
   template: `
     @if (hero(); as heroData) {
       <div class="hero-detail">
+        <!-- 图片放大查看器 -->
+        @if (showImageModal()) {
+          <div class="image-modal-overlay" (click)="closeImageModal()"></div>
+          <div class="image-modal">
+            <button class="modal-close" (click)="closeImageModal()">✕</button>
+            <img [src]="modalImageUrl()" [alt]="modalImageTitle()" class="modal-image">
+            <div class="modal-caption">{{ modalImageTitle() }}</div>
+          </div>
+        }
+        
         <!-- 英雄头部 -->
         <div class="hero-header-section">
           <div class="hero-avatar-wrapper">
-            <img [src]="heroData.avatar" [alt]="heroData.name" class="hero-avatar-img" (error)="handleImageError($event)">
+            <img [src]="heroData.avatar" [alt]="heroData.name" class="hero-avatar-img" (error)="handleImageError($event)" (click)="openImageModal(heroData.avatar, heroData.name)" style="cursor: pointer;">
             <div class="tier-badge tier-{{ heroData.tier.toLowerCase() }}">{{ heroData.tier }}</div>
+            <div class="click-hint">点击查看大图</div>
           </div>
           
           <div class="hero-info">
@@ -108,6 +119,80 @@ import type { Hero } from '../../data/hero-data';
 
     .hero-avatar-wrapper {
       position: relative;
+    }
+    
+    .click-hint {
+      position: absolute;
+      bottom: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+      opacity: 0.6;
+      white-space: nowrap;
+    }
+    
+    /* 图片查看器 Modal */
+    .image-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .image-modal {
+      position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
+      animation: modalZoomIn 0.3s ease-out;
+    }
+    
+    @keyframes modalZoomIn {
+      from {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    
+    .modal-image {
+      max-width: 100%;
+      max-height: 80vh;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+    
+    .modal-caption {
+      text-align: center;
+      color: #fff;
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    
+    .modal-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      transition: transform 0.2s;
+    }
+    
+    .modal-close:hover {
+      transform: scale(1.2);
     }
 
     .hero-avatar {
@@ -376,6 +461,22 @@ export class HeroDetailComponent {
   readonly heroId = input.required<string>();
 
   readonly hero = this.heroService.getHeroByIdSignal(this.heroId());
+  
+  // 图片查看器
+  readonly showImageModal = signal<boolean>(false);
+  readonly modalImageUrl = signal<string>('');
+  readonly modalImageTitle = signal<string>('');
+  
+  openImageModal(imageUrl: string, title: string): void {
+    this.modalImageUrl.set(imageUrl);
+    this.modalImageTitle.set(title);
+    this.showImageModal.set(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  
+  closeImageModal(): void {
+    this.showImageModal.set(false);
+  }
 
   handleImageError(event: Event): void {
     const img = event.target as HTMLImageElement;

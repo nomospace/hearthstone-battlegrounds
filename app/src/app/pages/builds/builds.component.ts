@@ -6,6 +6,16 @@ import { BUILD_GUIDES, getBuildsByTier, getBuildsByDifficulty } from '../../data
   standalone: true,
   template: `
     <div class="builds-page">
+      <!-- 图片放大查看器 -->
+      @if (showImageModal) {
+        <div class="image-modal-overlay" (click)="closeImageModal()"></div>
+        <div class="image-modal">
+          <button class="modal-close" (click)="closeImageModal()">✕</button>
+          <img [src]="modalImageUrl" [alt]="modalImageTitle" class="modal-image">
+          <div class="modal-caption">{{ modalImageTitle }}</div>
+        </div>
+      }
+      
       <h2>⚔️ 流派攻略</h2>
       
       <div class="filters">
@@ -49,7 +59,9 @@ import { BUILD_GUIDES, getBuildsByTier, getBuildsByDifficulty } from '../../data
               <div class="cards-grid">
                 @for (card of build.coreCards; track card.name) {
                   <div class="card-item" [class]="'priority-' + card.priority">
-                    <div class="card-tier">T{{ card.tier }}</div>
+                    @if (card.imageUrl) {
+                      <img [src]="card.imageUrl" [alt]="card.name" class="card-image" (error)="handleCardImageError($event)" (click)="openImageModal(card.imageUrl!, card.name)" style="cursor: pointer;" title="点击查看大图">
+                    }
                     <div class="card-info">
                       <div class="card-name">{{ card.name }}</div>
                       <div class="card-desc">{{ card.description }}</div>
@@ -257,6 +269,20 @@ import { BUILD_GUIDES, getBuildsByTier, getBuildsByDifficulty } from '../../data
     .card-item.priority-重要 { border-left-color: #f39c12; }
     .card-item.priority-过渡 { border-left-color: #3498db; }
     
+    .card-image {
+      width: 60px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.3);
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+    
+    .card-image:hover {
+      transform: scale(1.05);
+    }
+    
     .card-tier {
       background: rgba(255, 255, 255, 0.2);
       padding: 0.3rem 0.6rem;
@@ -360,6 +386,69 @@ import { BUILD_GUIDES, getBuildsByTier, getBuildsByDifficulty } from '../../data
       border: 1px solid #2ecc71;
     }
     
+    /* 图片查看器 Modal */
+    .image-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .image-modal {
+      position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
+      animation: modalZoomIn 0.3s ease-out;
+    }
+    
+    @keyframes modalZoomIn {
+      from {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    
+    .modal-image {
+      max-width: 100%;
+      max-height: 80vh;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+    
+    .modal-caption {
+      text-align: center;
+      color: #fff;
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    
+    .modal-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    
+    .modal-close:hover {
+      transform: scale(1.2);
+    }
+    
     @media (max-width: 768px) {
       .build-matchups {
         grid-template-columns: 1fr;
@@ -371,6 +460,27 @@ export class BuildsComponent {
   builds = BUILD_GUIDES;
   tierFilter = 'all';
   diffFilter = 'all';
+  
+  // 图片查看器
+  showImageModal = false;
+  modalImageUrl = '';
+  modalImageTitle = '';
+  
+  openImageModal(imageUrl: string, title: string): void {
+    this.modalImageUrl = imageUrl;
+    this.modalImageTitle = title;
+    this.showImageModal = true;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  
+  closeImageModal(): void {
+    this.showImageModal = false;
+  }
+  
+  handleCardImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.style.display = 'none';
+  }
   
   get filteredBuilds() {
     let result = [...this.builds];
