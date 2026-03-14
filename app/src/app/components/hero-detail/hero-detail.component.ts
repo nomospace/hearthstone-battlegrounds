@@ -51,19 +51,24 @@ import type { Hero } from '../../data/hero-data';
           <div class="cards-grid">
             @for (card of heroData.synergies; track card.name) {
               <div class="card-item tier-{{ getCardTierClass(card.tier) }}">
-                <div class="card-header">
-                  <span class="card-tier">T{{ card.tier }}</span>
-                  <span class="card-cost">{{ card.cost }}费</span>
+                <div class="card-image-wrapper">
+                  <img [src]="card.imageUrl" [alt]="card.name" class="card-image" (error)="handleCardImageError($event)">
                 </div>
-                <h4 class="card-name">{{ card.name }}</h4>
-                <div class="card-stats">
-                  <span>{{ card.attack }}/{{ card.health }}</span>
-                </div>
-                <p class="card-desc">{{ card.description }}</p>
-                <div class="card-tags">
-                  @for (tag of card.tags; track tag) {
-                    <span class="tag">{{ tag }}</span>
-                  }
+                <div class="card-content">
+                  <div class="card-header">
+                    <span class="card-tier">T{{ card.tier }}</span>
+                    <span class="card-cost">{{ card.cost }}费</span>
+                  </div>
+                  <h4 class="card-name">{{ card.name }}</h4>
+                  <div class="card-stats">
+                    <span>⚔️{{ card.attack }}/{{ card.health }}❤️</span>
+                  </div>
+                  <p class="card-desc">{{ card.description }}</p>
+                  <div class="card-tags">
+                    @for (tag of card.tags; track tag) {
+                      <span class="tag">{{ tag }}</span>
+                    }
+                  </div>
                 </div>
               </div>
             }
@@ -216,10 +221,40 @@ import type { Hero } from '../../data/hero-data';
     }
 
     .card-item {
+      display: flex;
+      gap: 1rem;
       padding: 1rem;
       background: rgba(255, 255, 255, 0.1);
       border-radius: 12px;
       border-left: 4px solid transparent;
+      transition: transform 0.2s;
+    }
+    
+    .card-item:hover {
+      transform: translateY(-2px);
+    }
+    
+    .card-image-wrapper {
+      width: 100px;
+      height: 140px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    .card-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .card-content {
+      flex: 1;
+      min-width: 0;
     }
 
     .card-item.tier-6 { border-left-color: #f39c12; }
@@ -324,6 +359,15 @@ import type { Hero } from '../../data/hero-data';
       .ability-icon {
         margin: 0 auto;
       }
+      
+      .card-item {
+        flex-direction: column;
+      }
+      
+      .card-image-wrapper {
+        width: 100%;
+        height: 140px;
+      }
     }
   `]
 })
@@ -336,8 +380,21 @@ export class HeroDetailComponent {
   handleImageError(event: Event): void {
     const img = event.target as HTMLImageElement;
     img.style.display = 'none';
-    img.parentElement!.style.background = 'rgba(243, 156, 18, 0.3)';
-    img.parentElement!.innerHTML = '🖼️';
+    const parent = img.parentElement;
+    if (parent) {
+      parent.style.background = 'rgba(243, 156, 18, 0.3)';
+      parent.innerHTML = '🖼️';
+    }
+  }
+
+  handleCardImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.style.display = 'none';
+    const parent = img.parentElement;
+    if (parent) {
+      parent.style.background = 'rgba(100, 100, 100, 0.3)';
+      parent.innerHTML = '🃏';
+    }
   }
 
   getCardTierClass(tier: number): string {

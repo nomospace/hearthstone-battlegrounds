@@ -137,6 +137,26 @@ export const HEROES: Hero[] = [
         description: '战吼：发现一个野兽',
         imageUrl: 'https://art.hearthstonejson.com/v1/render/latest/zhCN/512x/BT_323.png',
         tags: ['野兽', '战吼']
+      },
+      {
+        name: '瑞文戴尔男爵',
+        tier: 6,
+        cost: 5,
+        attack: 4,
+        health: 5,
+        description: '你的亡语触发额外一次',
+        imageUrl: 'https://art.hearthstonejson.com/v1/render/latest/zhCN/512x/FP1_031.png',
+        tags: ['亡语', '增益']
+      },
+      {
+        name: '跳蛙骑士',
+        tier: 5,
+        cost: 4,
+        attack: 4,
+        health: 3,
+        description: '亡语：使一个友方野兽获得 +2/+2',
+        imageUrl: 'https://art.hearthstonejson.com/v1/render/latest/zhCN/512x/BT_715.png',
+        tags: ['野兽', '亡语']
       }
     ]
   },
@@ -163,14 +183,34 @@ export const HEROES: Hero[] = [
     },
     synergies: [
       {
-        name: '发现核心',
+        name: '奥术火炮',
+        tier: 4,
+        cost: 4,
+        attack: 3,
+        health: 3,
+        description: '在你发现一个随从后，获得 +2/+2',
+        imageUrl: 'https://art.hearthstonejson.com/v1/render/latest/zhCN/512x/TB_BaconShop_81.png',
+        tags: ['发现', '元素']
+      },
+      {
+        name: '布莱恩·铜须',
+        tier: 6,
+        cost: 5,
+        attack: 2,
+        health: 4,
+        description: '你的战吼触发两次',
+        imageUrl: 'https://art.hearthstonejson.com/v1/render/latest/zhCN/512x/LOE_079.png',
+        tags: ['野兽', '战吼']
+      },
+      {
+        name: '时间管理者诺兹',
         tier: 5,
         cost: 5,
         attack: 5,
         health: 5,
-        description: '战吼：发现一个随从',
-        imageUrl: 'https://art.hearthstonejson.com/v1/render/latest/zhCN/512x/LOE_079.png',
-        tags: ['发现']
+        description: '战吼：将你的技能刷新至可购买随从的数量',
+        imageUrl: 'https://art.hearthstonejson.com/v1/render/latest/zhCN/512x/TB_BaconShop_100.png',
+        tags: ['龙', '战吼']
       }
     ]
   },
@@ -197,14 +237,34 @@ export const HEROES: Hero[] = [
     },
     synergies: [
       {
-        name: '法术核心',
+        name: '管理者埃克索图斯',
         tier: 6,
-        cost: 6,
-        attack: 6,
-        health: 6,
-        description: '法术伤害 +2',
-        imageUrl: 'https://art.hearthstonejson.com/v1/render/latest/zhCN/512x/EX1_563.png',
-        tags: ['法术']
+        cost: 5,
+        attack: 5,
+        health: 5,
+        description: '在你施放一个法术后，随机使你牌库中的一张随从牌获得 +2/+2',
+        imageUrl: 'https://art.hearthstonejson.com/v1/render/latest/zhCN/512x/TB_BaconShop_107.png',
+        tags: ['元素', '法术']
+      },
+      {
+        name: '时间管理者诺兹',
+        tier: 5,
+        cost: 5,
+        attack: 5,
+        health: 5,
+        description: '战吼：将你的技能刷新至可购买随从的数量',
+        imageUrl: 'https://art.hearthstonejson.com/v1/render/latest/zhCN/512x/TB_BaconShop_100.png',
+        tags: ['龙', '战吼']
+      },
+      {
+        name: '布莱恩·铜须',
+        tier: 6,
+        cost: 5,
+        attack: 2,
+        health: 4,
+        description: '你的战吼触发两次',
+        imageUrl: 'https://art.hearthstonejson.com/v1/render/latest/zhCN/512x/LOE_079.png',
+        tags: ['野兽', '战吼']
       }
     ]
   },

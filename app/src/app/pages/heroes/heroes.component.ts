@@ -63,7 +63,9 @@ import { HeroService } from '../../services/hero.service';
           <a [routerLink]="['/heroes', hero.id]" class="hero-link">
             <div class="hero-detail-card" [class]="'tier-' + hero.tier.toLowerCase()">
             <div class="hero-header">
-              <div class="hero-avatar">🦸</div>
+              <div class="hero-avatar">
+                <img [src]="hero.avatar" [alt]="hero.name" class="hero-avatar-img" (error)="handleImageError($event)">
+              </div>
               <div class="hero-basic">
                 <h3>{{ hero.name }}</h3>
                 <div class="hero-english">{{ hero.nameEn }}</div>
@@ -219,7 +221,22 @@ import { HeroService } from '../../services/hero.service';
     }
     
     .hero-avatar {
-      font-size: 3rem;
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 50%;
+      border: 3px solid #f39c12;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    
+    .hero-avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
     
     .hero-basic h3 {
@@ -352,5 +369,15 @@ export class HeroesComponent {
   
   setSortType(sortType: 'winrate' | 'pickrate'): void {
     this.heroService.setSortType(sortType);
+  }
+  
+  handleImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.style.display = 'none';
+    const parent = img.parentElement;
+    if (parent) {
+      parent.style.background = 'rgba(243, 156, 18, 0.3)';
+      parent.innerHTML = '🦸';
+    }
   }
 }
