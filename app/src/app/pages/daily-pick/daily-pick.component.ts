@@ -58,15 +58,15 @@ interface DailyFortune {
               
               <div class="hero-stats">
                 <div class="stat">
-                  <span class="stat-value">{{ dailyHero().winRate }}%</span>
+                  <span class="stat-value">{{ dailyHero().stats.winRate }}%</span>
                   <span class="stat-label">胜率</span>
                 </div>
                 <div class="stat">
-                  <span class="stat-value">{{ dailyHero().pickRate }}%</span>
+                  <span class="stat-value">{{ dailyHero().stats.pickRate }}%</span>
                   <span class="stat-label">选择率</span>
                 </div>
                 <div class="stat">
-                  <span class="stat-value">{{ dailyHero().avgPlacement }}</span>
+                  <span class="stat-value">{{ dailyHero().stats.avgPlacement }}</span>
                   <span class="stat-label">均次</span>
                 </div>
               </div>

@@ -88,15 +88,15 @@ import { HeroService } from '../../services/hero.service';
             
             <div class="hero-stats">
               <div class="stat-item">
-                <div class="stat-value">{{ hero.winRate }}%</div>
+                <div class="stat-value">{{ hero.stats.winRate }}%</div>
                 <div class="stat-label">胜率</div>
               </div>
               <div class="stat-item">
-                <div class="stat-value">{{ hero.pickRate }}%</div>
+                <div class="stat-value">{{ hero.stats.pickRate }}%</div>
                 <div class="stat-label">选择率</div>
               </div>
               <div class="stat-item">
-                <div class="stat-value">{{ hero.avgPlacement }}</div>
+                <div class="stat-value">{{ hero.stats.avgPlacement }}</div>
                 <div class="stat-label">均次</div>
               </div>
             </div>
