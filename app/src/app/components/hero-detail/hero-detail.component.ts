@@ -23,6 +23,15 @@ import type { Hero } from '../../data/hero-data';
   template: `
     @if (hero(); as heroData) {
       <div class="hero-detail">
+        <!-- 面包屑导航 -->
+        <nav class="breadcrumb">
+          <a routerLink="/home">首页</a>
+          <span class="separator">›</span>
+          <a routerLink="/heroes">英雄大全</a>
+          <span class="separator">›</span>
+          <span class="current">{{ heroData.name }}</span>
+        </nav>
+
         <!-- 图片放大查看器 -->
         @if (showImageModal()) {
           <div class="image-modal-overlay" (click)="closeImageModal()"></div>
@@ -256,6 +265,38 @@ import type { Hero } from '../../data/hero-data';
       max-width: 1000px;
       margin: 0 auto;
       padding: 1rem;
+    }
+
+    /* ========== 面包屑导航 ========== */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      padding: 0.75rem 1rem;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+    }
+
+    .breadcrumb a {
+      color: #f39c12;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .breadcrumb a:hover {
+      color: #ffb74d;
+      text-decoration: underline;
+    }
+
+    .breadcrumb .separator {
+      color: #666;
+    }
+
+    .breadcrumb .current {
+      color: #fff;
+      font-weight: 600;
     }
 
     /* ========== 头部区域 ========== */
