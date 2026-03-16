@@ -6,7 +6,8 @@ set -e
 
 PROJECT_NAME="hearthstone-battlegrounds"
 DIST_DIR="app/dist/${PROJECT_NAME}/browser"
-NGINX_ROOT="/var/www/${PROJECT_NAME}/browser"
+NGINX_ROOT="/var/www/${PROJECT_NAME}"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 echo "🦞 开始部署 ${PROJECT_NAME}..."
 
@@ -17,24 +18,28 @@ if [ ! -d "$DIST_DIR" ]; then
     exit 1
 fi
 
-# 2. 清理旧文件
+# 2. 给静态资源添加时间戳（避免缓存问题）
+echo "🕐 添加时间戳..."
+node "${SCRIPT_DIR}/scripts/add-timestamp.js" "${DIST_DIR}/index.html"
+
+# 3. 清理旧文件
 echo "🧹 清理旧部署..."
 sudo rm -rf ${NGINX_ROOT}/*
 
-# 3. 同步新文件
+# 4. 同步新文件
 echo "📦 同步构建产物..."
 sudo cp -r ${DIST_DIR}/* ${NGINX_ROOT}/
 
-# 4. 设置权限
+# 5. 设置权限
 echo "🔐 设置权限..."
 sudo chown -R nginx:nginx ${NGINX_ROOT}
 sudo chmod -R 755 ${NGINX_ROOT}
 
-# 5. 重载 Nginx
+# 6. 重载 Nginx
 echo "🔄 重载 Nginx..."
 sudo nginx -t && sudo nginx -s reload
 
-# 6. 注入部署时间戳
+# 7. 注入部署时间戳
 echo "🕐 注入部署时间戳..."
 DEPLOY_TIME=$(date '+%Y-%m-%d %H:%M:%S %Z')
 if [ -f "${NGINX_ROOT}/index.html" ]; then
@@ -45,12 +50,12 @@ if [ -f "${NGINX_ROOT}/index.html" ]; then
     echo "   部署时间：${DEPLOY_TIME}"
 fi
 
-# 7. 验证部署
+# 8. 验证部署
 echo "✅ 验证部署..."
-HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:80)
+HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/)
 if [ "$HTTP_CODE" = "200" ]; then
     echo "🎉 部署成功！"
-    echo "🌐 访问地址：http://localhost:80"
+    echo "🌐 访问地址：http://47.102.199.24/heroes"
 else
     echo "⚠️  部署完成但 HTTP 状态码异常：$HTTP_CODE"
     exit 1

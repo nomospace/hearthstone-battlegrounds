@@ -36,7 +36,8 @@ import { HEROES, HEROES_BY_WINRATE } from '../../data/hero-data';
           <div class="beginner-card">
             <div class="card-icon">🛡️</div>
             <h4>关键术语</h4>
-            <p><b>圣盾</b>: 免疫一次伤害 | <b>剧毒</b>: 一击必杀 | <b>嘲讽</b>: 必须先打</p>
+            <p><b title="免疫一次伤害">圣盾</b> | <b title="一击必杀">剧毒</b> | <b title="必须先打">嘲讽</b> | <b title="攻击两次">风怒</b></p>
+            <p class="term-hint">💡 悬停查看解释</p>
           </div>
         </div>
         <div class="beginner-heroes">

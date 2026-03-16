@@ -1,4 +1,4 @@
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, inject, input, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { HeroService } from '../../services/hero.service';
@@ -257,6 +257,12 @@ import type { Hero } from '../../data/hero-data';
           <a routerLink="/home" class="back-link">🏠 返回首页</a>
           <a routerLink="/daily" class="back-link">📅 每日推荐</a>
         </div>
+      </div>
+    } @else {
+      <div class="hero-not-found">
+        <h2>⚠️ 英雄未找到</h2>
+        <p>找不到 ID 为 "{{ heroId() }}" 的英雄</p>
+        <a routerLink="/heroes" class="back-link">← 返回英雄列表</a>
       </div>
     }
   `,
@@ -913,13 +919,39 @@ import type { Hero } from '../../data/hero-data';
         font-size: 1.2rem;
       }
     }
+
+    /* 找不到英雄 */
+    .hero-not-found {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+    }
+
+    .hero-not-found h2 {
+      color: #e74c3c;
+      margin-bottom: 1rem;
+    }
+
+    .hero-not-found p {
+      margin-bottom: 2rem;
+      opacity: 0.8;
+    }
   `]
 })
 export class HeroDetailComponent {
   private readonly heroService = inject(HeroService);
+  
+  // 从路由获取 heroId
   readonly heroId = input.required<string>();
 
-  readonly hero = this.heroService.getHeroByIdSignal(this.heroId());
+  // 使用 computed 响应 heroId 变化
+  readonly hero = computed(() => {
+    const id = this.heroId();
+    const found = this.heroService.getAllHeroes().find(hero => hero.id === id);
+    console.log('Looking for hero with id:', id, 'Found:', found?.name);
+    return found;
+  });
 
   // 图片查看器
   readonly showImageModal = signal<boolean>(false);
